@@ -20,6 +20,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
 
   // You can expose other APTs you need here.
-  executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker-command', code)
+  executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker-command', code),
+  saveData: (key: string, value: string) => ipcRenderer.invoke("save-data", key, value),
+  loadData: (key: string) => ipcRenderer.invoke("load-data", key),
   // ...
 })

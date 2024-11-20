@@ -32,6 +32,8 @@ interface Window {
         queries: object[];
       };
     }>;
+    saveData: (key: string, value: string) => Promise<string | null> ;
+    loadData: (key: string) => Promise<string | null> ;
   }
 
   // You can add other APIs you need here.

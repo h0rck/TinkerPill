@@ -1,10 +1,12 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { registerAllEvents } from './Events/eventes'
+import Store from "electron-store";
 
 // const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const store = new Store();
 
 // The built directory structure
 //
@@ -46,6 +48,15 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+
+  ipcMain.handle("save-data", (event, key: string, value: string) => {
+    store.set(key, value);
+  });
+
+  ipcMain.handle("load-data", (event, key: string) => {
+    return store.get(key);
+  });
+  
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -70,3 +81,4 @@ app.whenReady().then( () => {
   createWindow()
   registerAllEvents()
 })
+
