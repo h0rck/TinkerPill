@@ -1,54 +1,45 @@
 import React, { useState } from "react";
-import PhpEditor from "./components/PhpEditor";
-import { JSONTree } from 'react-json-tree';
+import Topbar from "./components/Topbar";
+import Sidebar from "./components/Sidebar";
+import EditorPage from "./pages/EditorPage";
 
 const App: React.FC = () => {
-  const [code, setCode] = useState("<?php\n\n Aluno::with('turma.alunos')->limit(2)->get()");
+  const [activeTab, setActiveTab] = useState("editor");
 
-  const [queryResult, setQueryResult] = useState<object>({});
-  const [result, setResult] = useState<object>({});
-
-  const handleCodeChange = (value: string) => {
-    setCode(value);
-  };
-
-  const handleExecuteTinker = async () => {
-    if (window.ipcRenderer) {
-      
-      const jsonRetorno =  await window.ipcRenderer.executeTinker(code); 
-
-      setQueryResult(jsonRetorno.json.queries);
-      setResult(jsonRetorno.json.result);
-      
-    } else {
-      console.error("Electron não está configurado corretamente!");
-    }
-  };
+  const menuItems = [
+    {
+      label: "Editor e Resultado",
+      active: activeTab === "editor",
+      onClick: () => setActiveTab("editor"),
+    },
+    {
+      label: "Configuração",
+      active: activeTab === "settings",
+      onClick: () => setActiveTab("settings"),
+    },
+  ];
 
   return (
-  <>
-    <h1 className="text-3xl font-bold underline bg-sky-500">
-      Hello world!
-    </h1>
+    <div className="h-screen flex flex-col">
+      
+      <Topbar
+        title="Meu Tinker App"
+        actions={<></>}
+      />
 
-    <div className="flex justify-between items-start h-screen">
-      <div className="w-1/2 p-2">
-        <PhpEditor size="500px" onChange={handleCodeChange} />
-        <button 
-          onClick={handleExecuteTinker}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Executar Tinker
-        </button>
-      </div>
-
-      <div className="w-1/2 p-2 overflow-y-auto border-l border-gray-300">
-        <JSONTree data={queryResult} />
-        <JSONTree data={result} />
+      <div className="flex flex-1">
+        <Sidebar menuItems={menuItems} />
+        <div className="flex-1 p-4 overflow-y-auto">
+          {activeTab === "editor" && <EditorPage />}
+          {activeTab === "settings" && (
+            <div>
+              <h2 className="text-lg font-bold mb-4">Configuração</h2>
+              <p>Aqui você pode adicionar configurações personalizadas futuramente.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </>
-
   );
 };
 
