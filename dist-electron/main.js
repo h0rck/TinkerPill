@@ -1,8 +1,43 @@
-import { app, BrowserWindow } from "electron";
-import { createRequire } from "node:module";
+import { ipcMain, app, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-createRequire(import.meta.url);
+import { spawn } from "child_process";
+const containerName = "devlocalhost.php-api";
+function tinkerCommandEvent() {
+  ipcMain.handle("execute-tinker-command", async (_event, command) => {
+    return new Promise((resolve) => {
+      command = command.replace(/^\s*<\?php\s*/, "").trim();
+      const phpCommand = `
+            DB::enableQueryLog();
+            $result = ${command};
+            $queries = DB::getQueryLog();
+            echo json_encode(['result' => $result, 'queries' => $queries], JSON_PRETTY_PRINT);
+          `;
+      const tinkerProcess = spawn("docker", [
+        "exec",
+        "-i",
+        containerName,
+        "php",
+        "artisan",
+        "tinker",
+        "--env=nilopoliseduca.dev"
+      ]);
+      let output = "";
+      tinkerProcess.stdout.on("data", (data) => {
+        output += data.toString();
+      });
+      tinkerProcess.on("close", () => {
+        resolve(output);
+      });
+      tinkerProcess.stdin.write(`${phpCommand}
+`);
+      tinkerProcess.stdin.end();
+    });
+  });
+}
+function registerAllEvents() {
+  tinkerCommandEvent();
+}
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -37,7 +72,10 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  registerAllEvents();
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
