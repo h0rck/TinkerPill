@@ -6,6 +6,7 @@ const EditorPage: React.FC = () => {
   const [code, setCode] = useState("<?php\n\n Aluno::with('turma.alunos')->limit(2)->get()");
   const [queryResult, setQueryResult] = useState<object>({});
   const [result, setResult] = useState<object>({});
+  const [splitSize, setSplitSize] = useState<number>(50); // Tamanho inicial em porcentagem
 
   const handleCodeChange = (value: string) => {
     setCode(value);
@@ -20,6 +21,21 @@ const EditorPage: React.FC = () => {
     } else {
       console.error("Electron não está configurado corretamente!");
     }
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    const newSplitSize = (e.clientX / window.innerWidth) * 100;
+    setSplitSize(Math.min(Math.max(newSplitSize, 10), 90)); // Limita entre 10% e 90%
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseDown = () => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
   return (
@@ -38,12 +54,18 @@ const EditorPage: React.FC = () => {
       {/* Conteúdo Principal */}
       <div className="flex flex-1">
         {/* Editor */}
-        <div className="w-1/2 p-4 border-r border-gray-700">
+        <div style={{ width: `${splitSize}%` }} className="p-4 border-r border-gray-700">
           <PhpEditor size="500px" onChange={handleCodeChange} />
         </div>
 
+        {/* Barra de Redimensionamento */}
+        <div
+          className="w-1 cursor-col-resize bg-gray-700"
+          onMouseDown={handleMouseDown}
+        ></div>
+
         {/* Resultados */}
-        <div className="w-1/2 p-4 overflow-y-auto">
+        <div style={{ width: `${100 - splitSize}%` }} className="p-4 overflow-y-auto">
           <h2 className="text-lg font-bold mb-2">Resultados:</h2>
           <div className="mb-4">
             <JSONTree data={queryResult} theme="monokai" />

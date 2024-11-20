@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import EditorPage from "./pages/EditorPage";
 import { FaPlay, FaCog } from "react-icons/fa"; // Ícones
+import ConfigPage from "./pages/ConfigPage";
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("editor");
@@ -25,12 +26,7 @@ const App: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto">
         {activeTab === "editor" && <EditorPage />}
-        {activeTab === "settings" && (
-          <div>
-            <h2 className="text-lg font-bold mb-4">Configuração</h2>
-            <p>Aqui você pode adicionar configurações personalizadas futuramente.</p>
-          </div>
-        )}
+        {activeTab === "settings" && <ConfigPage />}
       </div>
     </div>
   );

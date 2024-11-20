@@ -4,6 +4,7 @@ import { jsonTransformService } from '../services/jsonTransformService';
 
 
 const containerName = 'devlocalhost.php-api';
+const envName = 'nilopoliseduca.dev';
 
 export function tinkerCommandEvent() {
     
@@ -25,7 +26,7 @@ export function tinkerCommandEvent() {
             'php',
             'artisan',
             'tinker',
-            '--env=nilopoliseduca.dev'
+            envName,
           ]);
     
           let output = '';
