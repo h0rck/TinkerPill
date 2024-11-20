@@ -29,7 +29,7 @@ const App: React.FC = () => {
 
       <div className="flex flex-1">
         <Sidebar menuItems={menuItems} />
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto">
           {activeTab === "editor" && <EditorPage />}
           {activeTab === "settings" && (
             <div>
