@@ -26,20 +26,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', height: '100vh' }}>
+  <>
+    <h1 className="text-3xl font-bold underline bg-sky-500">
+      Hello world!
+    </h1>
 
-    <div style={{ width: '50%', padding: '10px' }}>
-      <PhpEditor size="500px" onChange={handleCodeChange} />
-      <button onClick={handleExecuteTinker}>Executar Tinker</button>
-    </div>
+    <div className="flex justify-between items-start h-screen">
+      <div className="w-1/2 p-2">
+        <PhpEditor size="500px" onChange={handleCodeChange} />
+        <button 
+          onClick={handleExecuteTinker}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Executar Tinker
+        </button>
+      </div>
 
-    <div style={{ width: '50%', padding: '10px', overflowY: 'auto', borderLeft: '1px solid #ccc' }}>
-      <JSONTree data={queryResult} />
-      <JSONTree data={result} />
+      <div className="w-1/2 p-2 overflow-y-auto border-l border-gray-300">
+        <JSONTree data={queryResult} />
+        <JSONTree data={result} />
+      </div>
     </div>
-  </div>
-</>
+  </>
+
   );
 };
 
