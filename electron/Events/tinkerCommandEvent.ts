@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import { spawn } from 'child_process';
+import { jsonTransformService } from '../services/jsonTransformService';
 
 
 const containerName = 'devlocalhost.php-api';
@@ -34,7 +35,9 @@ export function tinkerCommandEvent() {
           });
     
           tinkerProcess.on('close', () => {
-            resolve(output);
+            // console.log(jsonTransformService(output).meta)
+            const formattedOutput = jsonTransformService(output);
+            resolve(formattedOutput);
           });
     
           tinkerProcess.stdin.write(`${phpCommand}\n`);

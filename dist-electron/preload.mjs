@@ -18,6 +18,6 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
     return electron.ipcRenderer.invoke(channel, ...omit);
   },
   // You can expose other APTs you need here.
-  executeTinke: (code) => electron.ipcRenderer.invoke("execute-tinker-command", code)
+  executeTinker: (code) => electron.ipcRenderer.invoke("execute-tinker-command", code)
   // ...
 });

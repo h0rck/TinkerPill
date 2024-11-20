@@ -2,6 +2,20 @@ import { ipcMain, app, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { spawn } from "child_process";
+function jsonTransformService(dataString) {
+  const splitIndex = dataString.indexOf("{");
+  if (splitIndex === -1) {
+    throw new Error("No JSON found in the string.");
+  }
+  const meta = dataString.slice(0, splitIndex).trim();
+  const jsonPart = dataString.slice(splitIndex).trim();
+  try {
+    const parsedJson = JSON.parse(jsonPart);
+    return { meta, json: parsedJson };
+  } catch (error) {
+    throw new Error("Invalid JSON");
+  }
+}
 const containerName = "devlocalhost.php-api";
 function tinkerCommandEvent() {
   ipcMain.handle("execute-tinker-command", async (_event, command) => {
@@ -27,7 +41,8 @@ function tinkerCommandEvent() {
         output += data.toString();
       });
       tinkerProcess.on("close", () => {
-        resolve(output);
+        const formattedOutput = jsonTransformService(output);
+        resolve(formattedOutput);
       });
       tinkerProcess.stdin.write(`${phpCommand}
 `);

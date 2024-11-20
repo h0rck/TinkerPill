@@ -20,6 +20,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
 
   // You can expose other APTs you need here.
-  executeTinke: (code: string) => ipcRenderer.invoke('execute-tinker-command', code)
+  executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker-command', code)
   // ...
 })

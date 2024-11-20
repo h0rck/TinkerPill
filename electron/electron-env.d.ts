@@ -23,5 +23,16 @@ declare namespace NodeJS {
 
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
-  ipcRenderer: import('electron').IpcRenderer
+  // ipcRenderer: import('electron').IpcRenderer
+  ipcRenderer: {
+    executeTinker: (code: string) => Promise<{
+      meta: string;
+      json: {
+        result: object;
+        queries: object[];
+      };
+    }>;
+  }
+
+  // You can add other APIs you need here.
 }
