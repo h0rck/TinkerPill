@@ -1,5 +1,4 @@
 import { app, BrowserWindow } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { registerAllEvents } from './Events/eventes'
@@ -29,7 +28,7 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: '',
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
