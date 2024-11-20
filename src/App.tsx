@@ -1,14 +1,19 @@
-import './App.css'
+import React, { useState } from "react";
+import PhpEditor from "./components/PhpEditor";
 
-function App() {
+const App: React.FC = () => {
+  const [code, setCode] = useState("");
+
+  const handleCodeChange = (value: string) => {
+    setCode(value);
+  };
 
   return (
-    <>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+    <PhpEditor size="500px" onChange={handleCodeChange} />
+    <button onClick={() => console.log("Código Final:", code)}>Exibir Código</button>
+  </div>
+  );
+};
 
-export default App
+export default App;
