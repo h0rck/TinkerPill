@@ -39,6 +39,13 @@ function createWindow() {
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
+
+    const containerName = store.get('containerName') || '';
+    const envName = store.get('envName') || '';
+
+    // Emitindo um evento para o listener registrado no `ipcMain`
+    ipcMain.emit('set-config', null, { containerName, envName });
+
   })
 
   if (VITE_DEV_SERVER_URL) {
@@ -49,13 +56,8 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 
-  ipcMain.handle("save-data", (event, key: string, value: string) => {
-    store.set(key, value);
-  });
+ 
 
-  ipcMain.handle("load-data", (event, key: string) => {
-    return store.get(key);
-  });
   
 }
 
@@ -81,4 +83,12 @@ app.whenReady().then( () => {
   createWindow()
   registerAllEvents()
 })
+
+ipcMain.handle("save-data", (event, key: string, value: string) => {
+  store.set(key, value);
+});
+
+ipcMain.handle("load-data", (event, key: string) => {
+  return store.get(key);
+});
 

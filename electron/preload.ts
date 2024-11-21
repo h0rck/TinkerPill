@@ -10,18 +10,19 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.off(channel, ...omit)
   },
-  send(...args: Parameters<typeof ipcRenderer.send>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.send(channel, ...omit)
-  },
+  // send(...args: Parameters<typeof ipcRenderer.send>) {
+  //   const [channel, ...omit] = args
+  //   return ipcRenderer.send(channel, ...omit)
+  // },
   invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
 
   // You can expose other APTs you need here.
-  executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker-command', code),
+  executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker', code),
   saveData: (key: string, value: string) => ipcRenderer.invoke("save-data", key, value),
   loadData: (key: string) => ipcRenderer.invoke("load-data", key),
+  send: (channel : string, data:object) => ipcRenderer.send(channel, data),
   // ...
 })

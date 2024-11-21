@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 const ConfigPage: React.FC = () => {
   const [containerName, setContainerName] = useState("");
@@ -6,10 +6,14 @@ const ConfigPage: React.FC = () => {
 
   // Função para salvar os dados
   const handleSave = async () => {
-    if (window.ipcRenderer.saveData) {
+    if (window.ipcRenderer && window.ipcRenderer.saveData) {
       try {
         await window.ipcRenderer.saveData("containerName", containerName);
         await window.ipcRenderer.saveData("envName", envName);
+
+        // Enviar configurações ao processo principal
+        window.ipcRenderer.send("set-config", { containerName, envName });
+
         alert("Configurações salvas com sucesso!");
       } catch (error) {
         console.error("Erro ao salvar configurações:", error);
@@ -20,9 +24,9 @@ const ConfigPage: React.FC = () => {
     }
   };
 
-  // Função para carregar os dados
-  const handleLoad = async () => {
-    if (window.ipcRenderer.loadData) {
+  // Função para carregar os dados automaticamente
+  const handleLoad = useCallback(async () => {
+    if (window.ipcRenderer && window.ipcRenderer.loadData) {
       try {
         const savedContainerName = await window.ipcRenderer.loadData("containerName");
         const savedEnvName = await window.ipcRenderer.loadData("envName");
@@ -36,12 +40,12 @@ const ConfigPage: React.FC = () => {
     } else {
       alert("A funcionalidade de carregar não está disponível.");
     }
-  };
+  }, []);
 
   // Carregar os dados automaticamente ao montar o componente
   useEffect(() => {
     handleLoad();
-  }, []);
+  }, [handleLoad]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 text-gray-800">
@@ -89,12 +93,6 @@ const ConfigPage: React.FC = () => {
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Salvar Configurações
-              </button>
-              <button
-                onClick={handleLoad}
-                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-              >
-                Carregar Configurações
               </button>
             </div>
           </div>
