@@ -100,6 +100,6 @@ TinkerPill é uma aplicação para depuração de códigos Laravel, escrita em E
 
 Este projeto está sob a licença [MIT](LICENSE).
 
-## 📷 Capturas de Tela
+<!-- ## 📷 Capturas de Tela
 
-(Adicione imagens ou GIFs mostrando o funcionamento da aplicação)
+(Adicione imagens ou GIFs mostrando o funcionamento da aplicação) -->
