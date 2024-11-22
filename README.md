@@ -1,5 +1,4 @@
-# Criar o conteúdo do README em formato .md
-readme_content = """
+
 # TinkerPill
 
 TinkerPill é uma aplicação para depuração de códigos Laravel, escrita em Electron e React, projetada para facilitar a execução de comandos no Tinker do Laravel, exibindo o JSON de retorno e a query SQL gerada.
@@ -24,95 +23,83 @@ TinkerPill é uma aplicação para depuração de códigos Laravel, escrita em E
    ```bash
    git clone https://github.com/seu-usuario/tinkerpill.git
    cd tinkerpill
-Instale as dependências:
+   ```
 
-bash
-Always show details
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-Copy code
-npm install
-Configure o ambiente:
+3. Configure o ambiente:
+   - Certifique-se de ter o Laravel configurado na pasta do projeto.
+   - Configure o Docker, se necessário.
 
-Certifique-se de ter o Laravel configurado na pasta do projeto.
-Configure o Docker, se necessário.
-Execute o projeto:
+4. Execute o projeto:
+   - Modo desenvolvimento:
+     ```bash
+     npm run dev
+     ```
+   - Build para produção:
+     ```bash
+     npm run build
+     ```
 
-Modo desenvolvimento:
-bash
-Always show details
+## 🔧 Configuração
 
-Copy code
-npm run dev
-Build para produção:
-bash
-Always show details
+- **Docker**: O TinkerPill detecta automaticamente o container Laravel rodando na máquina.
+- **Local**: Certifique-se de que o PHP esteja instalado no sistema e acessível pelo terminal.
 
-Copy code
-npm run build
-🔧 Configuração
-Docker: O TinkerPill detecta automaticamente o container Laravel rodando na máquina.
-Local: Certifique-se de que o PHP esteja instalado no sistema e acessível pelo terminal.
-🖥️ Exemplo de Uso
-Escreva o código no editor:
+## 🖥️ Exemplo de Uso
 
-php
-Always show details
+1. Escreva o código no editor:
+   ```php
+   User::find(1);
+   ```
 
-Copy code
-User::find(1);
-O retorno será exibido como:
+2. O retorno será exibido como:
+   - **JSON**:
+     ```json
+     {
+       "id": 1,
+       "name": "John Doe",
+       "email": "john@example.com"
+     }
+     ```
+   - **Query**:
+     ```sql
+     select * from users where id = 1 limit 1;
+     ```
 
-JSON:
-json
-Always show details
+## 🎨 Tecnologias Utilizadas
 
-Copy code
-{
-  "id": 1,
-  "name": "John Doe",
-  "email": "john@example.com"
-}
-Query:
-sql
-Always show details
+- **Electron**: Para criar aplicações desktop multiplataforma.
+- **React**: Interface dinâmica e reativa.
+- **CodeMirror**: Editor de código leve e personalizável.
+- **TailwindCSS**: Estilização moderna e rápida.
+- **TypeScript**: Tipagem estática para maior confiabilidade.
+- **Docker**: Execução isolada em ambiente de container.
 
-Copy code
-select * from users where id = 1 limit 1;
-🎨 Tecnologias Utilizadas
-Electron: Para criar aplicações desktop multiplataforma.
-React: Interface dinâmica e reativa.
-CodeMirror: Editor de código leve e personalizável.
-TailwindCSS: Estilização moderna e rápida.
-TypeScript: Tipagem estática para maior confiabilidade.
-Docker: Execução isolada em ambiente de container.
-🤝 Contribuição
-Faça um fork do projeto.
-Crie uma branch para a sua feature:
-bash
-Always show details
+## 🤝 Contribuição
 
-Copy code
-git checkout -b minha-feature
-Commit suas alterações:
-bash
-Always show details
+1. Faça um fork do projeto.
+2. Crie uma branch para a sua feature:
+   ```bash
+   git checkout -b minha-feature
+   ```
+3. Commit suas alterações:
+   ```bash
+   git commit -m "Adicionei uma nova feature"
+   ```
+4. Faça o push para a branch:
+   ```bash
+   git push origin minha-feature
+   ```
+5. Abra um Pull Request.
 
-Copy code
-git commit -m "Adicionei uma nova feature"
-Faça o push para a branch:
-bash
-Always show details
+## 📝 Licença
 
-Copy code
-git push origin minha-feature
-Abra um Pull Request.
-📝 Licença
-Este projeto está sob a licença MIT.
+Este projeto está sob a licença [MIT](LICENSE).
 
-📷 Capturas de Tela
-(Adicione imagens ou GIFs mostrando o funcionamento da aplicação) """
+## 📷 Capturas de Tela
 
-Salvar o conteúdo em um arquivo README.md
-file_path = "/mnt/data/README.md" with open(file_path, "w") as readme_file: readme_file.write(readme_content)
-
-file_path
+(Adicione imagens ou GIFs mostrando o funcionamento da aplicação)
