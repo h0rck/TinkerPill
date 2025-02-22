@@ -48,7 +48,6 @@ const ConfigPage: React.FC = () => {
     if (window.ipcRenderer && window.ipcRenderer.listarContainers) {
       try {
         const { containers } = await window.ipcRenderer.listarContainers();
-        console.log("Containers:", containers);
         setContainers(containers);
       } catch (error) {
         console.error("Erro ao listar containers:", error);
