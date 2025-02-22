@@ -21,10 +21,8 @@ export function listarContainersEvent() {
                 if (error) {
                     reject({ error });
                 } else {
-                    // Processando a saída do comando "docker ps --format '{{.Names}}'"
                     const containers = output.split('\n').map(line => line.trim()).filter(line => line);
 
-                    console.log('Containers:', containers);
                     resolve({ containers });
                 }
             });

@@ -57,6 +57,7 @@ export function tinkerCommandEvent() {
 
       tinkerProcess.on('close', () => {
         if (error) {
+          console.log('Erro:', error);
           resolve({ error });
         } else {
           try {
