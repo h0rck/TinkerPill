@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { spawn } from 'child_process';
 
 export function listarContainersEvent() {
-    ipcMain.handle('list-containers', async (_event) => {
+    ipcMain.handle('listar-containers', async (_event) => {
         return new Promise((resolve, reject) => {
             const dockerProcess = spawn('docker', ['ps']);
 
