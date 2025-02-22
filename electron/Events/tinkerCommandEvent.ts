@@ -18,7 +18,7 @@ ipcMain.on('set-config', (_event, newConfig) => {
 
 export function tinkerCommandEvent() {
   ipcMain.handle('execute-tinker', async (_event, command) => {
-
+    console.log('Comando recebido:', config);
     if (!config.containerName || !config.envName) {
       return { error: 'As configurações containerName e envName não estão definidas.' };
     }
@@ -42,8 +42,8 @@ export function tinkerCommandEvent() {
         'tinker',
         config.envName,
       ]);
-      console.log('Comando PHP:', 'docker exec -i ' + config.containerName + ' php artisan tinker ' + config.envName);
 
+      console.log('Comando PHP:', 'docker exec -i ' + config.containerName + ' php artisan tinker ' + config.envName);
       let output = '';
       let error = '';
 
@@ -56,18 +56,11 @@ export function tinkerCommandEvent() {
       });
 
       tinkerProcess.on('close', () => {
-        if (error) {
-          console.log('Erro:', error);
-          resolve({ error });
-        } else {
-          try {
-            const formattedOutput = jsonTransformService(output);
-            console.log('Resultado formatado:', formattedOutput);
-            resolve(formattedOutput);
-          } catch (err) {
-            resolve({ error: `Transform error` });
-          }
-        }
+
+        const formattedOutput = jsonTransformService(output);
+        resolve(formattedOutput);
+
+
       });
 
       tinkerProcess.stdin.write(`${phpCommand}\n`);
