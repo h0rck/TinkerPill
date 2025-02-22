@@ -12,14 +12,13 @@ let config = {
 };
 
 ipcMain.on('set-config', (_event, newConfig) => {
-  config = { ...config, ...newConfig }; 
-  console.log('Configurações atualizadas:', config);
+  config = { ...config, ...newConfig };
 });
 
 
 export function tinkerCommandEvent() {
   ipcMain.handle('execute-tinker', async (_event, command) => {
-    console.log('Comando recebido:', config);
+
     if (!config.containerName || !config.envName) {
       return { error: 'As configurações containerName e envName não estão definidas.' };
     }
@@ -43,8 +42,8 @@ export function tinkerCommandEvent() {
         'tinker',
         config.envName,
       ]);
+      console.log('Comando PHP:', 'docker exec -i ' + config.containerName + ' php artisan tinker ' + config.envName);
 
-      console.log('Comando PHP:',  'exec -i ' + config.containerName + ' php artisan tinker ' + config.envName);
       let output = '';
       let error = '';
 

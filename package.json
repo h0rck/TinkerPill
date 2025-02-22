@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@codemirror/lang-php": "^6.0.1",
-    "@monaco-editor/react": "^4.6.0",
     "@uiw/codemirror-theme-dracula": "^4.23.6",
     "@uiw/react-codemirror": "^4.23.6",
     "electron-store": "^10.0.0",
