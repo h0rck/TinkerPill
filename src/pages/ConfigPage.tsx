@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 const ConfigPage: React.FC = () => {
   const [containerName, setContainerName] = useState("");
   const [envName, setEnvName] = useState("");
+  const [containers, setContainers] = useState<string[]>([]);
 
   // Função para salvar os dados
   const handleSave = async () => {
@@ -42,9 +43,26 @@ const ConfigPage: React.FC = () => {
     }
   }, []);
 
+  // Função para listar os containers
+  const handleListContainers = async () => {
+    if (window.ipcRenderer && window.ipcRenderer.listarContainers) {
+      try {
+        const { containers } = await window.ipcRenderer.listarContainers();
+        console.log("Containers:", containers);
+        setContainers(containers);
+      } catch (error) {
+        console.error("Erro ao listar containers:", error);
+        alert("Erro ao listar containers.");
+      }
+    } else {
+      alert("A funcionalidade de listar containers não está disponível.");
+    }
+  };
+
   // Carregar os dados automaticamente ao montar o componente
   useEffect(() => {
     handleLoad();
+    handleListContainers();
   }, [handleLoad]);
 
   return (
@@ -63,14 +81,19 @@ const ConfigPage: React.FC = () => {
               <label htmlFor="containerName" className="block text-sm font-medium text-gray-700">
                 Nome do Container
               </label>
-              <input
+              <select
                 id="containerName"
-                type="text"
                 value={containerName}
                 onChange={(e) => setContainerName(e.target.value)}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Digite o nome do container"
-              />
+              >
+                <option value="">Selecione um container</option>
+                {containers.map((container) => (
+                  <option key={container} value={container}>
+                    {container}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>

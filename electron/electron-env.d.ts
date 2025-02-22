@@ -32,7 +32,9 @@ interface Window {
         queries: object[];
       };
     }>;
+
     listarContainers: () => Promise<{ containers: string[] }>;
+
     saveData: (key: string, value: string) => Promise<string | null>;
     loadData: (key: string) => Promise<string | null>;
     send: (channel: string, data: object) => void;

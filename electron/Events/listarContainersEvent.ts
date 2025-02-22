@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 export function listarContainersEvent() {
     ipcMain.handle('listar-containers', async (_event) => {
         return new Promise((resolve, reject) => {
-            const dockerProcess = spawn('docker', ['ps']);
+            const dockerProcess = spawn('docker', ['ps', '--format', '{{.Names}}']);
 
             let output = '';
             let error = '';
@@ -21,8 +21,10 @@ export function listarContainersEvent() {
                 if (error) {
                     reject({ error });
                 } else {
-                    // Processando a saída do comando "docker ps"
+                    // Processando a saída do comando "docker ps --format '{{.Names}}'"
                     const containers = output.split('\n').map(line => line.trim()).filter(line => line);
+
+                    console.log('Containers:', containers);
                     resolve({ containers });
                 }
             });
