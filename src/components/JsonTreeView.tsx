@@ -11,12 +11,33 @@ interface SearchResult {
     value: any;
 }
 
-const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = false }) => {
-    const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
+const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data }) => {
+    // Remove initialExpanded prop since we'll always start expanded
+    const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>(() => {
+        // Initialize with all nodes expanded
+        const expandAll = (obj: any, path: string = ''): Record<string, boolean> => {
+            let expanded: Record<string, boolean> = {};
+
+            if (typeof obj === 'object' && obj !== null) {
+                Object.entries(obj).forEach(([key, value]) => {
+                    const currentPath = path ? `${path}-${key}` : key;
+                    expanded[currentPath] = true;
+
+                    if (typeof value === 'object' && value !== null) {
+                        expanded = { ...expanded, ...expandAll(value, currentPath) };
+                    }
+                });
+            }
+
+            return expanded;
+        };
+
+        return expandAll(data);
+    });
+
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [currentResultIndex, setCurrentResultIndex] = useState(0);
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const getTypeLabel = (value: any): string => {
         if (Array.isArray(value)) return 'array';
@@ -42,7 +63,7 @@ const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = fal
     const getNodeKey = (path: string, key: string): string => `${path}-${key}`;
 
     const isExpanded = (key: string): boolean => {
-        return expandedNodes[key] ?? initialExpanded;
+        return expandedNodes[key] ?? true; // Default to true instead of false
     };
 
     const toggleExpand = (key: string) => {
@@ -174,7 +195,7 @@ const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = fal
     // Add keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (!isSearchOpen || searchResults.length === 0) return;
+            if (searchResults.length === 0) return;
 
             if (e.key === 'Enter' && e.shiftKey) {
                 navigateResults('prev');
@@ -185,52 +206,46 @@ const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = fal
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isSearchOpen, searchResults.length]);
+    }, [searchResults.length]);
 
     return (
         <div className="rounded bg-[#1e1e1e] text-[11px]">
             <div className="sticky top-0 z-20 bg-[#1e1e1e] border-b border-[#2a2a2a]">
-                <div className="flex items-center p-2">
-                    <button
-                        onClick={() => setIsSearchOpen(!isSearchOpen)}
-                        className="p-1 hover:bg-[#2a2a2a] rounded"
-                    >
-                        <MdSearch className="w-4 h-4 text-gray-400" />
-                    </button>
-
-                    {isSearchOpen && (
-                        <div className="flex items-center flex-1 ml-2">
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Pesquisar..."
-                                className="bg-[#2a2a2a] text-gray-200 px-2 py-1 rounded text-xs w-full focus:outline-none focus:ring-1 focus:ring-green-500"
-                            />
-                            {searchResults.length > 0 && (
-                                <div className="flex items-center ml-2 text-gray-400 text-xs">
-                                    <span>{currentResultIndex + 1}/{searchResults.length}</span>
-                                    <button
-                                        onClick={() => navigateResults('prev')}
-                                        className="p-1 hover:bg-[#2a2a2a] rounded ml-1"
-                                    >
-                                        <MdKeyboardArrowUp className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => navigateResults('next')}
-                                        className="p-1 hover:bg-[#2a2a2a] rounded"
-                                    >
-                                        <MdKeyboardArrowDown className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            )}
+                <div className="flex items-center h-[22px]">
+                    <div className="flex items-center flex-1">
+                        <div className="px-2">
+                            <MdSearch className="w-3 h-3 text-gray-400" />
                         </div>
-                    )}
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Pesquisar..."
+                            className="bg-[#2a2a2a] text-gray-200 px-2 h-[18px] text-[10px] w-full focus:outline-none"
+                        />
+                        {searchResults.length > 0 && (
+                            <div className="flex items-center px-2 text-gray-400 text-[10px] bg-[#2a2a2a] h-[18px] border-l border-[#3a3a3a]">
+                                <span>{currentResultIndex + 1}/{searchResults.length}</span>
+                                <button
+                                    onClick={() => navigateResults('prev')}
+                                    className="px-1 hover:text-gray-200"
+                                >
+                                    <MdKeyboardArrowUp className="w-3 h-3" />
+                                </button>
+                                <button
+                                    onClick={() => navigateResults('next')}
+                                    className="px-1 hover:text-gray-200"
+                                >
+                                    <MdKeyboardArrowDown className="w-3 h-3" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 {searchResults.length > 0 && (
-                    <div className="px-2 py-1 text-xs text-gray-400 border-t border-[#2a2a2a]">
-                        Encontrado {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''}
-                        (Use Enter/Shift+Enter para navegar)
+                    <div className="px-2 text-[9px] text-gray-500 h-[16px] flex items-center border-t border-[#2a2a2a]">
+                        {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''}
+                        <span className="ml-1 text-gray-600">(Enter/Shift+Enter)</span>
                     </div>
                 )}
             </div>

@@ -51,9 +51,9 @@ const EditorPage: React.FC = () => {
         flex items-center justify-center gap-2 px-4 h-[26px] rounded
         font-normal tracking-wide text-[12px]
         transition-colors duration-150 ml-1
-         ${isExecuting
-          ? 'bg-green-700/50 cursor-wait text-green-100'
-          : 'bg-green-600/40 hover:bg-green-500/50 text-green-100'
+        ${isExecuting
+          ? 'bg-[#1e4230] text-[#89b995] cursor-wait border border-[#2b5a40]'
+          : 'bg-[#1e4230] text-[#89b995] hover:bg-[#2b5a40] border border-transparent hover:border-[#3b7554]'
         }
       `}
     >
