@@ -16,9 +16,19 @@ interface ModelInfo {
     methods: string[];
 }
 
+interface ModelRelation {
+    method: string;
+    type: string;
+    model: string;
+}
+
 let config = {
     containerName: '',
     envName: '',
+    scanCache: null as {
+        data: ModelInfo[];
+        timestamp: number;
+    } | null
 };
 
 ipcMain.on('set-config', (_event, newConfig) => {
@@ -32,24 +42,33 @@ export function setupLaravelScanner() {
                 throw new Error('Container name not configured');
             }
 
+            // If we have cache, return it
+            if (config.scanCache) {
+                return {
+                    success: true,
+                    data: config.scanCache.data,
+                    fromCache: true
+                };
+            }
+
+            // Only scan if we don't have cache
             const models: ModelInfo[] = [];
 
-            // Comando para listar todos os modelos no container
+            // Lista todos os modelos
             const { stdout: modelsOutput } = await execAsync(
                 `docker exec ${config.containerName} find app/Models -name "*.php"`
             );
             const modelFiles = modelsOutput.split('\n').filter(Boolean);
 
-            // Comando para listar todas as migrações
+            // Lista todas as migrações
             const { stdout: migrationsOutput } = await execAsync(
                 `docker exec ${config.containerName} find database/migrations -name "*.php"`
             );
             const migrations = migrationsOutput.split('\n').filter(Boolean);
 
-            // Mapa para armazenar colunas das tabelas
+            // Processa migrações para extrair colunas
             const tableColumns = new Map<string, string[]>();
 
-            // Processa migrações para extrair colunas
             for (const migration of migrations) {
                 const { stdout: content } = await execAsync(
                     `docker exec ${config.containerName} cat ${migration}`
@@ -81,7 +100,7 @@ export function setupLaravelScanner() {
                 const tableName = tableMatch?.[1] || modelName.toLowerCase() + 's';
 
                 // Extrai relacionamentos
-                const relations = [];
+                const relations: ModelRelation[] = [];
                 const relationRegex = /public function (\w+)\(\)\s*\{[\s\n]*return \$this->(hasMany|belongsTo|hasOne|belongsToMany)\(([^)]+)\)/g;
                 let relationMatch;
 
@@ -96,8 +115,10 @@ export function setupLaravelScanner() {
                 // Extrai métodos personalizados
                 const methodRegex = /public function (?!__)\w+\(/g;
                 const methods = Array.from(content.matchAll(methodRegex))
-                    .map(match => match[0].replace('public function ', '').replace('(', ''));
+                    .map(match => match[0].replace('public function ', '').replace('(', ''))
+                    .filter(method => !['__construct', ...relations.map(r => r.method)].includes(method));
 
+                // Adiciona informações do modelo
                 models.push({
                     name: modelName,
                     tableName,
@@ -107,17 +128,33 @@ export function setupLaravelScanner() {
                 });
             }
 
+
             return {
                 success: true,
-                data: models
+                data: models,
+                fromCache: false
             };
 
         } catch (error) {
             console.error('Erro ao escanear projeto Laravel no container:', error);
             return {
                 success: false,
-                error: error || 'Unknown error'
+                error: error instanceof Error ? error.message : 'Unknown error'
             };
         }
+    });
+
+    // Evento para limpar cache
+    ipcMain.handle('clear-laravel-scan', () => {
+        config.scanCache = null;
+        return { success: true };
+    });
+
+    // Evento para verificar status do cache
+    ipcMain.handle('check-laravel-scan-cache', () => {
+        return {
+            hasCachedData: !!config.scanCache,
+            timestamp: config.scanCache?.timestamp || null
+        };
     });
 }
