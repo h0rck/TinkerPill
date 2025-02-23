@@ -18,13 +18,13 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ width, queryResult, result 
             className="flex flex-col h-full bg-[#1e1e1e]"
         >
             <div className="flex-1 min-h-0 overflow-y-auto scrollbar scrollbar-w-2 scrollbar-track-[#1e1e1e] scrollbar-thumb-[#2a2a2a] hover:scrollbar-thumb-[#3a3a3a]">
-                <div className="p-4 space-y-4">
+                <div className="p-2 space-y-4">
                     {hasQueries && (
                         <div className="space-y-2">
                             <h3 className="text-xs font-medium text-gray-400 sticky top-0 bg-[#1e1e1e] py-1 z-10">
                                 Queries Executadas
                             </h3>
-                            <div className="bg-[#252525] rounded p-2">
+                            <div className="bg-[#252525] rounded p-1">
                                 <JsonTreeView data={queryResult} />
                             </div>
                         </div>
@@ -35,7 +35,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ width, queryResult, result 
                             <h3 className="text-xs font-medium text-gray-400 sticky top-0 bg-[#1e1e1e] py-1 z-10">
                                 Resultado
                             </h3>
-                            <div className="bg-[#252525] rounded p-2">
+                            <div className="bg-[#252525] rounded p-1">
                                 <JsonTreeView data={result} />
                             </div>
                         </div>

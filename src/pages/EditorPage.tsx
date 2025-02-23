@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { MdPlayArrow, MdCode, MdOutlineStorage } from "react-icons/md";
+import { MdPlayArrow } from "react-icons/md";
 import PhpEditor from "../components/PhpEditor";
-import JsonTreeView from "../components/JsonTreeView";
 import Topbar from "../components/Topbar";
 import ResultsPanel from "../components/ResultsPanel";
 
@@ -49,15 +48,17 @@ const EditorPage: React.FC = () => {
       onClick={handleExecuteTinker}
       disabled={isExecuting}
       className={`
-        flex items-center gap-1 px-2 h-[22px] rounded-sm text-[11px] mr-4
-        ${isExecuting
+        flex items-center justify-center gap-2 px-4 h-[26px] rounded
+        font-normal tracking-wide text-[12px]
+        transition-colors duration-150 ml-1
+         ${isExecuting
           ? 'bg-green-700/50 cursor-wait text-green-100'
           : 'bg-green-600/40 hover:bg-green-500/50 text-green-100'
         }
       `}
     >
-      <MdPlayArrow className="w-3 h-3" />
-      <span className="font-medium">{isExecuting ? 'Executando...' : 'Executar'}</span>
+      <MdPlayArrow className="w-[16px] h-[16px]" />
+      <span>{isExecuting ? 'Executando...' : 'Executar'}</span>
     </button>
   );
 
