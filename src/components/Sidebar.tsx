@@ -1,29 +1,66 @@
 import React from "react";
 
-interface SidebarProps {
-  menuItems: Array<{
-    icon: React.ReactNode; // Ícone para o botão
-    active: boolean; // Determina se o botão está ativo
-    onClick: () => void; // Função ao clicar no botão
-  }>;
+interface TopbarProps {
+  title: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
+  actions?: React.ReactNode;
+  variant?: 'default' | 'transparent';
+  size?: 'sm' | 'md' | 'lg';
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
+const Topbar: React.FC<TopbarProps> = ({
+  title,
+  subtitle,
+  icon,
+  actions,
+  variant = 'default',
+  size = 'md'
+}) => {
+  const sizes = {
+    sm: 'py-2 px-4',
+    md: 'py-3 px-6',
+    lg: 'py-4 px-8'
+  };
+
+  const variants = {
+    default: 'bg-gray-800 shadow-md border-b border-gray-700',
+    transparent: 'bg-transparent'
+  };
+
   return (
-    <div className="bg-gray-700 text-white w-12 p-2 flex flex-col items-center space-y-2">
-      {menuItems.map((item, index) => (
-        <button
-          key={index}
-          className={`w-10 h-10 flex items-center justify-center rounded ${
-            item.active ? "bg-blue-500 text-white" : "bg-gray-600 text-gray-300"
-          } hover:bg-blue-400`}
-          onClick={item.onClick}
-        >
-          {item.icon}
-        </button>
-      ))}
+    <div className={`
+      ${variants[variant]}
+      ${sizes[size]}
+      transition-all duration-200
+      flex justify-between items-center
+      text-white
+    `}>
+      <div className="flex items-center space-x-3">
+        {icon && (
+          <div className="text-gray-400">
+            {icon}
+          </div>
+        )}
+        <div>
+          <h1 className="text-lg font-semibold leading-tight">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-sm text-gray-400 mt-0.5">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {actions && (
+        <div className="flex items-center space-x-2">
+          {actions}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Sidebar;
+export default Topbar;
