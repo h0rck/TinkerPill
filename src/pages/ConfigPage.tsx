@@ -142,149 +142,126 @@ const ConfigPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900">
-      <div className="flex justify-between items-center px-6 py-4 bg-gray-800 border-b border-gray-700">
-        <div className="flex items-center space-x-3">
-          <MdSettings className="w-6 h-6 text-blue-500" />
-          <h1 className="text-xl font-bold text-white">Configurações</h1>
-        </div>
+    <div className="flex flex-col h-full bg-[#1a1a1a]">
+      <div className="flex items-center h-[28px] px-4 bg-[#1e1e1e] border-b border-[#2a2a2a]">
+        <span className="text-[11px] text-gray-400 font-normal">Configurações</span>
       </div>
 
-      <div className="flex-1 p-6 overflow-auto">
-        <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-          <div className="px-6 py-4">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Container Docker
-                </label>
-                <div className="flex space-x-2">
-                  <select
-                    value={containerName}
-                    onChange={(e) => setContainerName(e.target.value)}
-                    className="flex-1 bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Selecione um container</option>
-                    {containers.map((container) => (
-                      <option key={container} value={container}>
-                        {container}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={handleListContainers}
-                    className="p-2 text-gray-300 hover:text-white bg-gray-700 rounded-md hover:bg-gray-600"
-                  >
-                    <MdRefresh className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Ambiente
-                </label>
-                <input
-                  type="text"
-                  value={envName}
-                  onChange={(e) => setEnvName(e.target.value)}
-                  placeholder="local"
-                  className="w-full bg-gray-700 text-white rounded-md px-3 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+      <div className="flex-1 p-4 overflow-auto">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+              Container Docker
+            </label>
+            <div className="flex space-x-2">
+              <select
+                value={containerName}
+                onChange={(e) => setContainerName(e.target.value)}
+                className="flex-1 bg-[#1e1e1e] text-gray-300 text-[11px] rounded px-2 py-1 border border-[#2a2a2a] focus:outline-none focus:border-[#3a3a3a]"
+              >
+                <option value="">Selecione um container</option>
+                {containers.map((container) => (
+                  <option key={container} value={container}>{container}</option>
+                ))}
+              </select>
+              <button
+                onClick={handleListContainers}
+                className="p-1 text-gray-400 hover:text-gray-300 bg-[#1e1e1e] rounded hover:bg-[#2a2a2a]"
+              >
+                <MdRefresh className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-gray-700">
-            <div className="flex items-center justify-between">
-              <div className="flex space-x-2">
-                <button
-                  onClick={handleScan}
-                  disabled={scanning || !containerName}
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-md text-white
-                    transition-all duration-200 transform
-                    ${scanning || !containerName
-                      ? 'bg-gray-600 cursor-not-allowed'
-                      : 'bg-green-600 hover:bg-green-500 hover:scale-105'
-                    }
-                  `}
-                >
-                  <MdSearch className="w-5 h-5" />
-                  <span>{scanning ? 'Escaneando...' : 'Escanear Projeto'}</span>
-                </button>
-              </div>
-
-              {scanProgress && (
-                <div className="flex-1 ml-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-300">{scanProgress.status}</span>
-                    <span className="text-sm text-gray-300">{scanProgress.percentage}%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${scanProgress.percentage}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
+          <div>
+            <label className="block text-[11px] font-medium text-gray-400 mb-1">
+              Ambiente
+            </label>
+            <input
+              type="text"
+              value={envName}
+              onChange={(e) => setEnvName(e.target.value)}
+              placeholder="local"
+              className="w-full bg-[#1e1e1e] text-gray-300 text-[11px] rounded px-2 py-1 border border-[#2a2a2a] focus:outline-none focus:border-[#3a3a3a]"
+            />
           </div>
 
-          {/* Nova seção para exibir o cache */}
-          {scanCache && (
-            <div className="px-6 py-4 border-t border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-gray-300">
-                  Cache do Projeto
-                </h3>
-                <span className="text-xs text-gray-400">
-                  Atualizado: {new Date(scanCache.timestamp).toLocaleString()}
-                </span>
-              </div>
-              <div className="bg-gray-900 rounded-lg p-4 max-h-96 overflow-auto">
-                <JsonTreeView data={scanCache.data} />
-              </div>
-            </div>
-          )}
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={handleScan}
+              disabled={scanning || !containerName}
+              className={`
+                flex items-center gap-2 px-3 h-[22px] rounded text-[11px]
+                ${scanning || !containerName
+                  ? 'bg-[#1e4230] text-gray-500 cursor-not-allowed'
+                  : 'bg-[#1e4230] text-[#89b995] hover:bg-[#2b5a40] border border-transparent hover:border-[#3b7554]'
+                }
+              `}
+            >
+              <MdSearch className="w-3 h-3" />
+              <span>{scanning ? 'Escaneando...' : 'Escanear Projeto'}</span>
+            </button>
 
-          <div className="px-6 py-4 bg-gray-850 border-t border-gray-700 rounded-b-lg">
             <button
               onClick={handleSave}
               disabled={loading}
               className={`
-                flex items-center space-x-2 px-4 py-2 rounded-md text-white
-                transition-all duration-200 transform
+                flex items-center gap-2 px-3 h-[22px] rounded text-[11px]
                 ${loading
-                  ? 'bg-blue-700 cursor-wait'
-                  : 'bg-blue-600 hover:bg-blue-500 hover:scale-105'
+                  ? 'bg-[#1e4230] text-gray-500 cursor-not-allowed'
+                  : 'bg-[#1e4230] text-[#89b995] hover:bg-[#2b5a40] border border-transparent hover:border-[#3b7554]'
                 }
               `}
             >
-              <MdSave className="w-5 h-5" />
-              <span>{loading ? 'Salvando...' : 'Salvar Configurações'}</span>
+              <MdSave className="w-3 h-3" />
+              <span>{loading ? 'Salvando...' : 'Salvar'}</span>
             </button>
           </div>
-        </div>
 
-        {notification.type && (
-          <div
-            className={`
-              fixed bottom-4 right-4 flex items-center space-x-2 px-4 py-3 rounded-lg shadow-lg
-              transition-all duration-300 transform
-              ${notification.type === 'success' ? 'bg-green-600' : 'bg-red-600'} text-white
-            `}
-          >
-            {notification.type === 'success' ? (
-              <MdCheckCircle className="w-5 h-5" />
-            ) : (
-              <MdError className="w-5 h-5" />
-            )}
-            <span>{notification.message}</span>
-          </div>
-        )}
+          {scanProgress && (
+            <div className="space-y-1">
+              <div className="flex justify-between text-[11px] text-gray-400">
+                <span>{scanProgress.status}</span>
+                <span>{scanProgress.percentage}%</span>
+              </div>
+              <div className="w-full bg-[#2a2a2a] rounded-sm h-1">
+                <div
+                  className="bg-[#3b7554] h-1 rounded-sm transition-all duration-300"
+                  style={{ width: `${scanProgress.percentage}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {scanCache && (
+            <div className="pt-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[11px] text-gray-400">Cache do Projeto</span>
+                <span className="text-[11px] text-gray-500">
+                  {new Date(scanCache.timestamp).toLocaleString()}
+                </span>
+              </div>
+              <div className="bg-[#1e1e1e] rounded border border-[#2a2a2a]">
+                <JsonTreeView data={scanCache.data} />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      {notification.type && (
+        <div className={`
+          fixed bottom-4 right-4 flex items-center gap-2 px-3 py-2 rounded text-[11px]
+          ${notification.type === 'success' ? 'bg-[#1e4230] text-[#89b995]' : 'bg-[#4e1e1e] text-[#b98989]'}
+        `}>
+          {notification.type === 'success' ? (
+            <MdCheckCircle className="w-3 h-3" />
+          ) : (
+            <MdError className="w-3 h-3" />
+          )}
+          <span>{notification.message}</span>
+        </div>
+      )}
     </div>
   );
 };
