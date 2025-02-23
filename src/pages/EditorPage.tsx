@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { MdPlayArrow, MdCode, MdOutlineStorage } from "react-icons/md";
 import PhpEditor from "../components/PhpEditor";
 import JsonTreeView from "../components/JsonTreeView";
+import Topbar from "../components/Topbar";
+import ResultsPanel from "../components/ResultsPanel";
 
 const EditorPage: React.FC = () => {
   const [code, setCode] = useState("<?php\n\n Aluno::with('turma.alunos')->limit(2)->get()");
@@ -10,15 +12,10 @@ const EditorPage: React.FC = () => {
   const [splitSize, setSplitSize] = useState<number>(50);
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const handleCodeChange = (value: string) => {
-    setCode(value);
-  };
+  const handleCodeChange = (value: string) => setCode(value);
 
   const handleExecuteTinker = async () => {
-    if (!window.ipcRenderer) {
-      console.error("Electron não está configurado corretamente!");
-      return;
-    }
+    if (!window.ipcRenderer) return;
 
     setIsExecuting(true);
     try {
@@ -47,91 +44,45 @@ const EditorPage: React.FC = () => {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-gray-900 text-gray-100">
-      {/* Header Bar */}
-      <div className="flex justify-between items-center px-6 py-3 bg-gray-800 border-b border-gray-700">
-        <div className="flex items-center space-x-2">
-          <MdCode className="w-6 h-6 text-green-500" />
-          <h1 className="text-xl font-bold">PHP Tinker</h1>
-        </div>
-        <button
-          onClick={handleExecuteTinker}
-          disabled={isExecuting}
-          className={`
-            flex items-center space-x-2 px-4 py-2 rounded-md
-            transition-all duration-200 transform
-            ${isExecuting
-              ? 'bg-green-700 cursor-wait'
-              : 'bg-green-600 hover:bg-green-500 hover:scale-105'
-            }
-          `}
-        >
-          <MdPlayArrow className="w-5 h-5" />
-          <span>{isExecuting ? 'Executando...' : 'Executar'}</span>
-        </button>
-      </div>
+  const ExecuteButton = () => (
+    <button
+      onClick={handleExecuteTinker}
+      disabled={isExecuting}
+      className={`
+        flex items-center gap-1 px-2 h-[22px] rounded-sm text-[11px] mr-4
+        ${isExecuting
+          ? 'bg-green-700/50 cursor-wait text-green-100'
+          : 'bg-green-600/40 hover:bg-green-500/50 text-green-100'
+        }
+      `}
+    >
+      <MdPlayArrow className="w-3 h-3" />
+      <span className="font-medium">{isExecuting ? 'Executando...' : 'Executar'}</span>
+    </button>
+  );
 
-      {/* Main Content */}
+  return (
+    <div className="flex flex-col h-full bg-[#1a1a1a] text-gray-100">
+      <Topbar
+        title="PHP Tinker"
+        actions={<ExecuteButton />}
+      />
+
       <div className="flex flex-1 overflow-hidden">
-        {/* Editor Panel */}
-        <div
-          style={{ width: `${splitSize}%` }}
-          className="flex flex-col bg-gray-850 border-r border-gray-700"
-        >
-          <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800 border-b border-gray-700">
-            <MdCode className="w-4 h-4 text-gray-400" />
-            <span className="text-sm font-medium">Editor PHP</span>
-          </div>
+        <div style={{ width: `${splitSize}%` }} className="flex flex-col bg-[#1e1e1e] border-r border-[#2a2a2a]">
           <PhpEditor size="100%" onChange={handleCodeChange} />
         </div>
 
-        {/* Resize Handle */}
         <div
-          className="w-1 hover:w-2 cursor-col-resize bg-gray-700 hover:bg-green-500 transition-all duration-200"
+          className="w-[1px] hover:w-[2px] cursor-col-resize bg-[#2a2a2a] hover:bg-green-500 transition-all"
           onMouseDown={handleMouseDown}
         />
 
-        {/* Results Panel */}
-        <div
-          style={{ width: `${100 - splitSize}%` }}
-          className="flex flex-col bg-gray-850"
-        >
-          <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800 border-b border-gray-700">
-            <MdOutlineStorage className="w-4 h-4 text-gray-400" />
-            <span className="text-sm font-medium">Resultados</span>
-          </div>
-
-          <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-            {/* Queries Section */}
-            {Object.keys(queryResult).length > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-400">Queries Executadas</h3>
-                <div className="bg-gray-800 rounded-lg p-4">
-                  <JsonTreeView data={queryResult} />
-                </div>
-              </div>
-            )}
-
-            {/* Results Section */}
-            {Object.keys(result).length > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-400">Resultado</h3>
-                <div className="bg-gray-800 rounded-lg p-4">
-                  <JsonTreeView data={result} />
-                </div>
-              </div>
-            )}
-
-            {/* Empty State */}
-            {Object.keys(result).length === 0 && Object.keys(queryResult).length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                <MdCode className="w-12 h-12 mb-2" />
-                <p className="text-sm">Execute o código para ver os resultados</p>
-              </div>
-            )}
-          </div>
-        </div>
+        <ResultsPanel
+          width={100 - splitSize}
+          queryResult={queryResult}
+          result={result}
+        />
       </div>
     </div>
   );

@@ -41,12 +41,12 @@ const App: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-[#1a1a1a] overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#1a1a1a]">
       <AppTitleBar />
       <div className="flex flex-1 pt-[30px]"> {/* Added padding-top instead of height calc */}
         <Sidebar menuItems={menuItems} />
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1">
           {activeTab === "editor" && <EditorPage />}
           {activeTab === "settings" && <ConfigPage />}
           {activeTab === "diagram" && scanCache && (
