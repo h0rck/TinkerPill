@@ -83,9 +83,7 @@ const EditorPage: React.FC = () => {
             <MdCode className="w-4 h-4 text-gray-400" />
             <span className="text-sm font-medium">Editor PHP</span>
           </div>
-          <div className="flex-1 p-4">
-            <PhpEditor size="100%" onChange={handleCodeChange} />
-          </div>
+          <PhpEditor size="100%" onChange={handleCodeChange} />
         </div>
 
         {/* Resize Handle */}
