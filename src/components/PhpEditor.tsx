@@ -101,14 +101,15 @@ const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
   };
 
   return (
-    <div className="h-full flex-1 overflow-hidden">
+    <div className="h-full w-full flex-1 overflow-hidden">
       <CodeMirror
         value={code}
-        height="100vh"
+        height="100%" // Changed from 100vh to 100%
         theme={vscodeDark}
         extensions={[
           php(),
-          autocompletion({ override: [completions] })
+          autocompletion({ override: [completions] }),
+          EditorView.lineWrapping
         ]}
         basicSetup={{
           lineNumbers: true,
@@ -129,10 +130,11 @@ const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
         }}
         onChange={handleCodeChange}
         style={{
-          fontSize: '13px',
           height: '100%',
-          flex: 1,
+          flex: '1 1 auto',
           minHeight: '100%',
+          width: '100%',
+          fontSize: '13px',
         }}
       />
     </div>
