@@ -3,20 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { php } from "@codemirror/lang-php";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
-
-interface ModelInfo {
-  name: string;
-  tableName: string;
-  columns: string[];
-  relations: Array<{
-    type: string;
-    method: string;
-    model: string;
-  }>;
-  methods: string[];
-}
-
-type CodeEditorProps = { size: string; onChange: (code: string) => void };
+import { CodeEditorProps, ModelInfo } from '../types/interfaces';
 
 const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
   const [code, setCode] = useState("<?php\n\n Aluno::with('turma.alunos')->limit(2)->get()");
