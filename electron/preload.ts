@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   executeTinker: (code: string) => ipcRenderer.invoke('execute-tinker', code),
   listarContainers: () => ipcRenderer.invoke('listar-containers'),
+  scanLaravelProject: () => ipcRenderer.invoke('scan-laravel-project'),
   saveData: (key: string, value: string) => ipcRenderer.invoke("save-data", key, value),
   loadData: (key: string) => ipcRenderer.invoke("load-data", key),
   send: (channel: string, data: object) => ipcRenderer.send(channel, data),

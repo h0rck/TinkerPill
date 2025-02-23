@@ -34,6 +34,7 @@ interface Window {
     }>;
 
     listarContainers: () => Promise<{ containers: string[] }>;
+    scanLaravelProject: () => Promise<any>;
 
     saveData: (key: string, value: string) => Promise<string | null>;
     loadData: (key: string) => Promise<string | null>;
