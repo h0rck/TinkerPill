@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { php } from "@codemirror/lang-php";
-import { dracula } from "@uiw/codemirror-theme-dracula";
 import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
+import { EditorView } from '@codemirror/view';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { CodeEditorProps, ModelInfo } from '../types/interfaces';
 
 const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
@@ -100,17 +101,41 @@ const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
   };
 
   return (
-    <CodeMirror
-      value={code}
-      height={size}
-      extensions={[
-        php(),
-        autocompletion({ override: [completions] })
-      ]}
-      theme={dracula}
-      onChange={handleCodeChange}
-      className="rounded-lg border border-gray-700"
-    />
+    <div className="h-full flex-1 overflow-hidden">
+      <CodeMirror
+        value={code}
+        height="100vh"
+        theme={vscodeDark}
+        extensions={[
+          php(),
+          autocompletion({ override: [completions] })
+        ]}
+        basicSetup={{
+          lineNumbers: true,
+          foldGutter: true,
+          highlightActiveLine: true,
+          indentOnInput: true,
+          tabSize: 4,
+          highlightSelectionMatches: true,
+          foldKeymap: true,
+          dropCursor: true,
+          allowMultipleSelections: true,
+          bracketMatching: true,
+          closeBrackets: true,
+          autocompletion: true,
+          rectangularSelection: true,
+          crosshairCursor: true,
+          highlightActiveLineGutter: true,
+        }}
+        onChange={handleCodeChange}
+        style={{
+          fontSize: '13px',
+          height: '100%',
+          flex: 1,
+          minHeight: '100%',
+        }}
+      />
+    </div>
   );
 };
 
