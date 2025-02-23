@@ -31,6 +31,7 @@ let win: BrowserWindow | null
 function createWindow() {
   win = new BrowserWindow({
     icon: '',
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -56,9 +57,9 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 
- 
 
-  
+
+
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -79,7 +80,7 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then( () => {
+app.whenReady().then(() => {
   createWindow()
   registerAllEvents()
 })
@@ -90,5 +91,24 @@ ipcMain.handle("save-data", (event, key: string, value: string) => {
 
 ipcMain.handle("load-data", (event, key: string) => {
   return store.get(key);
+});
+
+// Add window control handlers
+ipcMain.on('minimize-window', () => {
+  if (win) win.minimize();
+});
+
+ipcMain.on('maximize-window', () => {
+  if (!win) return;
+
+  if (win.isMaximized()) {
+    win.unmaximize();
+  } else {
+    win.maximize();
+  }
+});
+
+ipcMain.on('close-window', () => {
+  if (win) win.close();
 });
 

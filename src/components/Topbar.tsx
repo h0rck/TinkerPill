@@ -7,9 +7,9 @@ interface TopbarProps {
 
 const Topbar: React.FC<TopbarProps> = ({ title, actions }) => {
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <h1 className="text-lg font-bold">{title}</h1>
-      <div className="space-x-4">{actions}</div>
+    <div className="bg-[#1e1e1e] text-white h-[28px] px-2 flex justify-between items-center border-b border-[#2a2a2a]">
+      <h1 className="text-xs font-normal text-gray-400">{title}</h1>
+      <div className="flex items-center gap-1">{actions}</div>
     </div>
   );
 };
