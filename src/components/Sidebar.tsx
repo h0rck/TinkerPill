@@ -1,12 +1,5 @@
 import React from "react";
-
-interface SidebarProps {
-  menuItems: Array<{
-    icon: React.ReactNode; // Ícone para o botão
-    active: boolean; // Determina se o botão está ativo
-    onClick: () => void; // Função ao clicar no botão
-  }>;
-}
+import { SidebarProps } from '../types/interfaces';
 
 const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
   return (

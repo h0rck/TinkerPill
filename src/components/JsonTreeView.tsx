@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
+import { JsonTreeViewProps } from '../types/interfaces';
 
-interface JsonTreeViewProps {
-    data: any;
-    initialExpanded?: boolean;
-}
-
-const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = false }) => {
+const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, expanded }) => {
     const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
 
     const getTypeLabel = (value: any): string => {
@@ -33,7 +29,7 @@ const JsonTreeView: React.FC<JsonTreeViewProps> = ({ data, initialExpanded = fal
     const getNodeKey = (path: string, key: string): string => `${path}-${key}`;
 
     const isExpanded = (key: string): boolean => {
-        return expandedNodes[key] ?? initialExpanded;
+        return expandedNodes[key] ?? expanded;
     };
 
     const toggleExpand = (key: string) => {
