@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder",
+    "build": "npm run clean && npm run compile && vite build && electron-builder",
+    "clean": "rm -rf dist dist-electron",
+    "compile": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -26,6 +28,7 @@
     "vite-tsconfig-paths": "^5.1.3"
   },
   "devDependencies": {
+    "@types/node": "^22.13.5",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",

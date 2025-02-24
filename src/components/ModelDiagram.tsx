@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ModelBox from './ModelBox';
-import { ModelInfo, Position, ModelDiagramProps } from '../types/interfaces';
+import { Position, ModelDiagramProps } from '../types/interfaces';
 
 const ModelDiagram: React.FC<ModelDiagramProps> = ({ models }) => {
     const svgRef = useRef<SVGSVGElement>(null);
     const [positions, setPositions] = useState<Map<string, Position>>(new Map());
-    const [svgSize, setSvgSize] = useState({ width: 2400, height: 1600 });
+    const [svgSize] = useState({ width: 2400, height: 1600 });
     const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 2400, height: 1600 });
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });

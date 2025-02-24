@@ -1,10 +1,7 @@
 import React from 'react';
 import { ModelBoxProps } from '../types/interfaces';
 
-const ModelBox: React.FC<ModelBoxProps> = ({ model, x, y }) => {
-    const boxWidth = 280;
-    const boxHeight = Math.max(200, 70 + (model.columns.length * 20));
-
+const ModelBox: React.FC<ModelBoxProps> = ({ model }) => {
     return (
         <div className="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700">
             {/* Header */}

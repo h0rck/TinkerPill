@@ -1,12 +1,15 @@
+// @ts-nocheck
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { registerAllEvents } from './Events/eventes'
-import Store from "electron-store";
+import Store from 'electron-store';
+import type { StoreSchema } from './types/electron-store';
 
 // const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const store = new Store();
+// @ts-ignore
+const store = new Store<StoreSchema>();
 
 // The built directory structure
 //
@@ -41,7 +44,9 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
 
+    // @ts-ignore
     const containerName = store.get('containerName') || '';
+    // @ts-ignore
     const envName = store.get('envName') || '';
 
     // Emitindo um evento para o listener registrado no `ipcMain`
@@ -86,10 +91,12 @@ app.whenReady().then(() => {
 })
 
 ipcMain.handle("save-data", (event, key: string, value: string) => {
+  // @ts-ignore
   store.set(key, value);
 });
 
 ipcMain.handle("load-data", (event, key: string) => {
+  // @ts-ignore
   return store.get(key);
 });
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { MdSave, MdSettings, MdRefresh, MdCheckCircle, MdError, MdSearch } from "react-icons/md";
+import { MdSave, MdRefresh, MdCheckCircle, MdError, MdSearch } from "react-icons/md";
 import JsonTreeView from "../components/JsonTreeView";
-import { ConfigState, ScanCache } from '../types/interfaces';
+import { ScanCache } from '../types/interfaces';
 
 const ConfigPage: React.FC = () => {
   const [containerName, setContainerName] = useState("");

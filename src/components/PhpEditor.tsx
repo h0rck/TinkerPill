@@ -6,7 +6,7 @@ import { EditorView } from '@codemirror/view';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { CodeEditorProps, ModelInfo } from '../types/interfaces';
 
-const PhpEditor: React.FC<CodeEditorProps> = ({ size, onChange }) => {
+const PhpEditor: React.FC<CodeEditorProps> = ({ onChange }) => {  // Removed unused size
   const [code, setCode] = useState("<?php\n\n Aluno::with('turma.alunos')->limit(2)->get()");
   const [modelData, setModelData] = useState<ModelInfo[]>([]);
 

@@ -3,9 +3,29 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
+    "outDir": "dist-electron",
+    "rootDir": ".",
     "allowSyntheticDefaultImports": true,
-    "strict": true
+    "strict": true,
+    "declaration": true,
+    "noEmit": false,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./electron/types"
+    ]
   },
-  "include": ["vite.config.ts", "electron/**/*"]
+  "include": [
+    "electron/**/*",
+    "vite.config.ts"
+  ]
 }
